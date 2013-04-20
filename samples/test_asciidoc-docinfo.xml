@@ -1,0 +1,27 @@
+
+<revhistory>
+
+	<revision>
+		<revnumber><![CDATA[1.2]]></revnumber>
+		<date><![CDATA[2013-02-22]]></date>
+		<authorinitials><![CDATA[Joseph HERLANT]]></authorinitials>
+		<revremark><![CDATA[These are my notes for 1.2 revision
+ And a bunch of other infos]]></revremark>
+	</revision>
+
+	<revision>
+		<revnumber><![CDATA[1.1]]></revnumber>
+		<date><![CDATA[2013-01-03]]></date>
+		<authorinitials><![CDATA[]]></authorinitials>
+		<revremark><![CDATA[this is a test for v1.1
+ You will notice that there is no author here...]]></revremark>
+	</revision>
+
+	<revision>
+		<revnumber><![CDATA[1.0]]></revnumber>
+		<date><![CDATA[2013-01-02]]></date>
+		<authorinitials><![CDATA[JHE]]></authorinitials>
+		<revremark><![CDATA[Creation
+ 2nd line of modification remark...]]></revremark>
+	</revision>
+</revhistory>
