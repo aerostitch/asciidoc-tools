@@ -213,7 +213,7 @@ if __name__ == '__main__':    #run tests if called from command-line
 ##    print("# A non customized revision class item");
 ##    print rev_item.gen_xml_from_self('\t');
 
-    input_filename = 'test_asciidoc.txt';
+    input_filename = 'samples/test_asciidoc.txt';
     
     f = open(input_filename, 'r');
     str_in = f.read();
