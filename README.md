@@ -9,6 +9,7 @@ Theses are the tools I develop to enhance my asciidoc experience
 Modifications history
 ~~~~~~~~~~~~~~~~~~~~~
 
+v0.2.1, Joseph HERLANT,2013-04-28: An xml tag test had been forgotten in the last commit. Correcting it.
 v0.2.0, Joseph HERLANT,2013-04-28: 
  Creating abstract class to have only one function that generate xml for each subclasses
  representing an xml block.

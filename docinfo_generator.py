@@ -55,7 +55,7 @@ __author__ = "Joseph HERLANT"
 __copyright__ = "Copyright 2013, Joseph HERLANT"
 __credits__ = ["Joseph HERLANT"]
 __license__ = "GPL"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __maintainer__ = "Joseph HERLANT"
 __email__ = "herlantj@gmail.com"
 __status__ = "Development"
@@ -269,7 +269,7 @@ class docinfo:
         
         if not re.match('^\s*$', line_indent):
             line_indent = "";
-        _result = "<?xml version=\"1.0\"?>";
+        _result = "";
         _result += "\n"+ line_indent +"<revhistory>";
         revision_items_list=['revnumber','date','authorinitials','revremark'];
         for revitem in self.revhistory:
