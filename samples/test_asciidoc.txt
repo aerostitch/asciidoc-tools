@@ -10,6 +10,7 @@ v1.2, Joseph HERLANT, 2013-02-22:
 v1.1, 2013-01-03:
  this is a test for v1.1
  You will notice that there is no author here...
+v1.0.1, Jojo, 2013-01-01: All in one line sample. All comment is on one line!
 v1.0, JHE, 2013-01-02:
  Creation
  2nd line of modification remark...

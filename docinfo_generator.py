@@ -4,6 +4,8 @@
 """
 This module generated the docinfo xml file from a text file formatted using asciidoc format.
 
+NOTE: This module is normally compatible python 2.6.6 (and later) and python3.
+
 Revision history rules for an optimal docinfo generation:
 ---------------------------------------------------------
 
@@ -33,16 +35,17 @@ v1.2, Joseph HERLANT, 2013-02-22:
 v1.1, 2013-01-03:
  this is a test for v1.1
  You will notice that there is no author here...
+v1.0.1, Jojo, 2013-01-01: All in one line sample. All comment is on one line!
 v1.0, JHE, 2013-01-02:
  Creation
  2nd line of modification remark...
 //////
 
 
-Then generate the doc using enerate in HTML using: 
-a2x -a docinfo -fxhtml test_asciidoc.txt 
-or in pdf format using:
-a2x -a docinfo -fxhtml test_asciidoc.txt 
+Then generate the HTML document using: 
+`a2x -a docinfo -fxhtml test_asciidoc.txt`
+Or the pdf document using:
+`a2x -a docinfo -fxhtml test_asciidoc.txt`
 """
 
 import re;
@@ -52,13 +55,109 @@ __author__ = "Joseph HERLANT"
 __copyright__ = "Copyright 2013, Joseph HERLANT"
 __credits__ = ["Joseph HERLANT"]
 __license__ = "GPL"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __maintainer__ = "Joseph HERLANT"
 __email__ = "herlantj@gmail.com"
 __status__ = "Development"
 
-class revision:
-    """ Subclass containing revision data for the revhistory tag """
+
+class docinfoitem(object):
+    """ This is an abstract class from what each class used to generate xml groups will inherit.
+    """
+    def __init__(self):
+        """ As it is an abstract class, it cannot be implemented directly. """
+        raise AbstractClassError;
+    
+    def gen_xml_from_self(self, line_indent = '', ordered_list = []):
+        """ Generates the xml structure from the current object using the following method:
+            - The top-level object xml tag will have the name of the class
+            - Each sub objects xml tag will have the name of a member and its value
+        WARNING: This will work only on non complex objects (only str or numeric members)
+        Input parameter:
+           - line_indent is either one or more tab, whitespace or alike
+           - ordered_list is the list of the elements you want to print in the order you want to.
+               This is used in order to validated DTD that are sensitive to the xml tags order.
+        Returns:
+            - An xml-formatted string
+        """
+        # Cleaning up given indentation
+        if not re.match('^\s*$', line_indent):
+            line_indent = "";
+
+        # Initializing given list if not already done
+        if ordered_list == "":
+            self.__dict__.keys()
+            
+        _result = "";
+        _result += "\n"+ line_indent +"<"+ self.__class__.__name__ +">";
+        for k in ordered_list:
+            # For each member of the class, transform it to an xml tag if exists as a member of the class
+            if k in self.__dict__.keys():
+                _result += "\n"+ line_indent +"\t<"+ k +"><![CDATA["+ self.__dict__[k] +"]]></"+ k +">";
+            else:
+                print("WARNING: The given key named \""+ k + "\" does not exists as a member of the class.");
+        _result += "\n"+ line_indent +"</"+ self.__class__.__name__ +">";
+        return _result;
+    
+##class legalnotice(docinfoitem):
+##    """ Subclass containing legal notice data for the legalnotice tag.
+##    Inherits from docinfoitem abstract class.
+##    """
+##    def __init__(self):
+##        """ Class constructor... Initializing inner variables
+##        Input parameter: Nothing
+##        Returns: Nothing
+##        """
+##        # Each item of a simpara is a paragraph at the end
+##        self.simpara = [];
+
+
+##class copyright(docinfoitem):
+##    """ Subclass containing copyright data for the copyright tag.
+##    Inherits from docinfoitem abstract class.
+##    """
+##    def __init__(self):
+##        """ Class constructor... Initializing inner variables
+##        Input parameter: Nothing
+##        Returns: Nothing
+##        """
+##        self.year = "1970";
+##        self.holder = "";
+
+
+    
+##class author(docinfoitem):
+##    """ Subclass containing copyright data for the copyright tag.
+##    Inherits from docinfoitem abstract class.
+##    """
+##    def __init__(self):
+##        """ Class constructor... Initializing inner variables
+##        Input parameter: Nothing
+##        Returns: Nothing
+##        """
+##        self.honorific = "";
+##        self.firstname = "";
+##        self.surname = "";
+##        self.othername = {'role':'test'};
+##        self.affiliation = affiliation();
+##    class affiliation(docinfoitem):
+##        """ Subclass containing copyright data for the copyright tag.
+##        Inherits from docinfoitem abstract class.
+##        """
+##        def __init__(self):
+##            """ Class constructor... Initializing inner variables
+##            Input parameter: Nothing
+##            Returns: Nothing
+##            """
+##            self.shortaffil = "";
+##            self.jobtitle = "";
+##            self.orgname = "";
+##            self.orgdiv = "";
+
+class revision(docinfoitem):
+    """ Subclass containing revision data for the revhistory tag.
+    Inherits from docinfoitem abstract class.
+    """
     def __init__(self):
         """ Class constructor... Initializing inner variables
         Input parameter: Nothing
@@ -66,27 +165,11 @@ class revision:
         """
         self.revnumber = "0";
         self.date = "0000-00-00";
-        self.modifier = "";
+        self.authorinitials = "";
         self.revremark = "";
-        
-    def gen_xml_from_self(self, line_indent = ''):
-        """ Generates the xml structure from the current object
-        Input parameter:
-           - line_indent is either one or more tab, whitespace or alike
-        Returns:
-            - An xml-formatted string
-        """
-        if not re.match('^\s*$', line_indent):
-            line_indent = "";
-        _result = "";
-        _result += "\n"+ line_indent +"<revision>";
-        _result += "\n"+ line_indent +"\t<revnumber><![CDATA["+ self.revnumber +"]]></revnumber>";
-        _result += "\n"+ line_indent +"\t<date><![CDATA["+ self.date +"]]></date>";
-        _result += "\n"+ line_indent +"\t<authorinitials><![CDATA["+ self.modifier +"]]></authorinitials>";
-        _result += "\n"+ line_indent +"\t<revremark><![CDATA["+ self.revremark +"]]></revremark>";
-        _result += "\n"+ line_indent +"</revision>";
-        return _result;
 
+
+    
 class docinfo:
     """ A class that will handle docinfo data """
     def __init__(self):
@@ -164,9 +247,9 @@ class docinfo:
             cur_rev.revnumber = remitem['revision'].strip();
             cur_rev.date = remitem['daterev'].strip();
             if remitem['modifier'] is None:
-                cur_rev.modifier = "";
+                cur_rev.authorinitials = "";
             else:
-                cur_rev.modifier = remitem['modifier'].strip().strip(',');
+                cur_rev.authorinitials = remitem['modifier'].strip().strip(',');
             cur_rev.revremark = remitem['remarks'].strip();
 ##            print cur_rev.gen_xml_from_self('\t');
             self.revhistory.append(cur_rev);
@@ -186,10 +269,11 @@ class docinfo:
         
         if not re.match('^\s*$', line_indent):
             line_indent = "";
-        _result = "";
+        _result = "<?xml version=\"1.0\"?>";
         _result += "\n"+ line_indent +"<revhistory>";
+        revision_items_list=['revnumber','date','authorinitials','revremark'];
         for revitem in self.revhistory:
-            _result += "\n"+ revitem.gen_xml_from_self(line_indent + '\t');
+            _result += "\n"+ revitem.gen_xml_from_self(line_indent + '\t', revision_items_list);
         _result += "\n"+ line_indent +"</revhistory>";
         return _result;
 
@@ -210,19 +294,19 @@ if __name__ == '__main__':    #run tests if called from command-line
 ##    print("# ************** Unit tests... To be done. **************");
 ##    print("# Testing the 'revision' class:");
 ##    rev_item = revision();
-##    print("# A non customized revision class item");
+##    print("# A non customized revhistory class item");
 ##    print rev_item.gen_xml_from_self('\t');
 
+    # Retrieving the data from the asciidoc text file
+##  TODO: use the arguments of the scripts to get this
     input_filename = 'samples/test_asciidoc.txt';
-    
     f = open(input_filename, 'r');
     str_in = f.read();
     f.close();
-    ##print str_in;
+    
     # This does it globally and print the table of hashtables to the screen.
     doc_item = docinfo();
     doc_item.get_revinfo_block(str_in);
-
 
     # writing output to the target file name
     out_f = open(doc_item.gen_docinfo_filename(input_filename), 'w');
@@ -232,5 +316,21 @@ if __name__ == '__main__':    #run tests if called from command-line
     print("XML file generation ended.");
 
 
+    # This is to check whether the generated xml conforms to the docbook's DTD
+##    import libxml2;
+##    dtd="""<!ELEMENT foo EMPTY>"""
+##    instance=doc_item.gen_xml_from_self('');
+##    dtd = libxml2.parseDTD("-//OASIS//DTD DocBook XML V4//EN",None);
+##    ctxt = libxml2.newValidCtxt();
+##    doc = libxml2.parseDoc(instance);
+##    ret = doc.validateDtd(ctxt, dtd);
+##    if ret != 1:
+##        print("error doing DTD validation");
+##    else:
+##        print("Generated XML has a valid DTD!");
+##
+##    doc.freeDoc();
+##    dtd.freeDtd();
+##    del dtd;
+##    del ctxt;
     
-

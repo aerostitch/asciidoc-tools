@@ -1,4 +1,4 @@
-
+<?xml version="1.0"?>
 <revhistory>
 
 	<revision>
@@ -15,6 +15,13 @@
 		<authorinitials><![CDATA[]]></authorinitials>
 		<revremark><![CDATA[this is a test for v1.1
  You will notice that there is no author here...]]></revremark>
+	</revision>
+
+	<revision>
+		<revnumber><![CDATA[1.0.1]]></revnumber>
+		<date><![CDATA[2013-01-01]]></date>
+		<authorinitials><![CDATA[Jojo]]></authorinitials>
+		<revremark><![CDATA[All in one line sample. All comment is on one line!]]></revremark>
 	</revision>
 
 	<revision>
