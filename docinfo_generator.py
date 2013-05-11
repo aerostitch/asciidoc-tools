@@ -6,6 +6,8 @@ This module generated the docinfo xml file from a text file formatted using asci
 
 NOTE: This module is normally compatible python 2.6.6 (and later) and python3.
 
+IMPORTANT: None of the following blocks are mandatory.
+
 Revision history rules for an optimal docinfo generation:
 ---------------------------------------------------------
 
@@ -65,14 +67,14 @@ Or the PDF document using:
 import re;
 from os import path;
 
-__author__ = "Joseph HERLANT"
-__copyright__ = "Copyright 2013, Joseph HERLANT"
-__credits__ = ["Joseph HERLANT"]
-__license__ = "GPL"
-__version__ = "0.2.1"
+__author__     = "Joseph HERLANT"
+__copyright__  = "Copyright 2013, Joseph HERLANT"
+__credits__    = ["Joseph HERLANT"]
+__license__    = "GPL"
+__version__    = "0.3.1"
 __maintainer__ = "Joseph HERLANT"
-__email__ = "josephherlantj@free.fr"
-__status__ = "Development"
+__email__      = "josephherlantj@free.fr"
+__status__     = "Development"
 
 
 class docinfoitem(object):
@@ -86,7 +88,9 @@ class docinfoitem(object):
         """ Generates the xml structure from the current object using the following method:
             - The top-level object xml tag will have the name of the class
             - Each sub objects xml tag will have the name of a member and its value
-        WARNING: This will work only on non complex objects (only str or numeric members)
+
+!!!!!!!!!!! WARNING: This will work only on non complex objects (only str or numeric members)
+        
         Input parameter:
            - line_indent is either one or more tab, whitespace or alike
            - ordered_list is the list of the elements you want to print in the order you want to.
@@ -115,7 +119,7 @@ class docinfoitem(object):
         _result += "\n"+ line_indent +"</"+ self.__class__.__name__ +">";
         return _result;
     
-##TODO: implement this class
+## TODO: implement this class
 ##class legalnotice(docinfoitem):
 ##    """ Subclass containing legal notice data for the legalnotice tag.
 ##    Inherits from docinfoitem abstract class.
@@ -194,9 +198,9 @@ class docinfo:
         Input parameter: Nothing
         Returns: Nothing
         """
-        self.authorgroup = [];  ##TODO: implement authorgroup tag
-        self.copyright = copyright();    ##TODO: implement the copyright class
-        self.legalnotice = [];  ##TODO: implement authorgroup tag
+        self.authorgroup = [];  ## TODO: implement authorgroup tag
+        self.copyright = copyright();
+        self.legalnotice = [];  ## TODO: implement authorgroup tag
         self.revhistory = [];
 
 
@@ -292,7 +296,7 @@ class docinfo:
             print("No copyright tag found");
         else:
             # If pattern matches, process data
-            ## print(regexinfo.search(filecontent).groupdict());
+##            print(regexinfo.search(filecontent).groupdict());
             tmp_dict = regexinfo.search(filecontent).groupdict();
             self.copyright.year = tmp_dict['date'].strip();
             self.copyright.holder = tmp_dict['holder'].strip();
@@ -306,7 +310,7 @@ class docinfo:
         Returns:
             An xml-formatted string
         """
-        ##TODO: implement these members too!
+##        TODO: implement these members too!
         # self.authorgroup = [];  # Not implemented yet
         # self.legalnotice = [];  # Not implemented yet
         
@@ -314,10 +318,10 @@ class docinfo:
             line_indent = "";
         _result = "";
 
-        ## Generating copyright tag
+        # Generating copyright tag
         _result += "\n"+ self.copyright.gen_xml_from_self(line_indent, ['year','holder']);
 
-        ## Generating revision history tags
+        # Generating revision history tags
         _result += "\n"+ line_indent +"<revhistory>";
         revision_items_list=['revnumber','date','authorinitials','revremark'];
         for revitem in self.revhistory:
