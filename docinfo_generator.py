@@ -10,6 +10,7 @@ Revision history rules for an optimal docinfo generation:
 ---------------------------------------------------------
 
 To extract the revision history data, put it in a comment block (more than 3 "/").
+
 Begin the block with one line only containing ":revinfo:"
 Then for each revision history item is like this:
   -> a block begins with a "v" followed by the version number (only digits separated by a ".")
@@ -26,8 +27,20 @@ The revision history ends with either:
  -> a comment line (a line beginning by more than 3 "/")
  -> a new block header (a line beginning by a ":something:"
 
-Example of revision history block:
+Copyright rules for optimal docinfo generation:
+-----------------------------------------------
+
+To avoid any conflict with the asciidoc format, put the copyright in a comment block.
+
+Begin the block with a line begining with the ":copyright:" tag.
+Then write the date followed by coma (",") and the company or author's name.
+You can use multiple lines for this block, but the best practice is to put all in one line.
+
+Example of correctly interpreted block:
+---------------------------------------
+
 //////
+:copyright:2013,Joseph HERLANT
 :revinfo:
 v1.2, Joseph HERLANT, 2013-02-22:
  These are my notes for 1.2 revision
@@ -42,9 +55,10 @@ v1.0, JHE, 2013-01-02:
 //////
 
 
-Then generate the HTML document using: 
+After running this script to generate the XML file, generate
+the HTML document using: 
 `a2x -a docinfo -fxhtml test_asciidoc.txt`
-Or the pdf document using:
+Or the PDF document using:
 `a2x -a docinfo -fxhtml test_asciidoc.txt`
 """
 
@@ -57,7 +71,7 @@ __credits__ = ["Joseph HERLANT"]
 __license__ = "GPL"
 __version__ = "0.2.1"
 __maintainer__ = "Joseph HERLANT"
-__email__ = "herlantj@gmail.com"
+__email__ = "josephherlantj@free.fr"
 __status__ = "Development"
 
 
@@ -76,7 +90,8 @@ class docinfoitem(object):
         Input parameter:
            - line_indent is either one or more tab, whitespace or alike
            - ordered_list is the list of the elements you want to print in the order you want to.
-               This is used in order to validated DTD that are sensitive to the xml tags order.
+               This is used in order to validated DTD that are sensitive to the xml tags order
+               and for filtering.
         Returns:
             - An xml-formatted string
         """
@@ -85,8 +100,9 @@ class docinfoitem(object):
             line_indent = "";
 
         # Initializing given list if not already done
-        if ordered_list == "":
-            self.__dict__.keys()
+        if ordered_list == []:
+##            print(self.__dict__);
+            ordered_list = self.__dict__.keys()
             
         _result = "";
         _result += "\n"+ line_indent +"<"+ self.__class__.__name__ +">";
@@ -99,6 +115,7 @@ class docinfoitem(object):
         _result += "\n"+ line_indent +"</"+ self.__class__.__name__ +">";
         return _result;
     
+##TODO: implement this class
 ##class legalnotice(docinfoitem):
 ##    """ Subclass containing legal notice data for the legalnotice tag.
 ##    Inherits from docinfoitem abstract class.
@@ -112,20 +129,20 @@ class docinfoitem(object):
 ##        self.simpara = [];
 
 
-##class copyright(docinfoitem):
-##    """ Subclass containing copyright data for the copyright tag.
-##    Inherits from docinfoitem abstract class.
-##    """
-##    def __init__(self):
-##        """ Class constructor... Initializing inner variables
-##        Input parameter: Nothing
-##        Returns: Nothing
-##        """
-##        self.year = "1970";
-##        self.holder = "";
+class copyright(docinfoitem):
+    """ Subclass containing copyright data for the copyright tag.
+    Inherits from docinfoitem abstract class.
+    """
+    def __init__(self):
+        """ Class constructor... Initializing inner variables
+        Input parameter: Nothing
+        Returns: Nothing
+        """
+        self.year = "1970";
+        self.holder = "";
 
 
-    
+## TODO: Add author and editor classes...
 ##class author(docinfoitem):
 ##    """ Subclass containing copyright data for the copyright tag.
 ##    Inherits from docinfoitem abstract class.
@@ -177,9 +194,9 @@ class docinfo:
         Input parameter: Nothing
         Returns: Nothing
         """
-        self.authorgroup = [];  # Not implemented yet
-        self.copyright = [];    # Not implemented yet
-        self.legalnotice = [];  # Not implemented yet
+        self.authorgroup = [];  ##TODO: implement authorgroup tag
+        self.copyright = copyright();    ##TODO: implement the copyright class
+        self.legalnotice = [];  ##TODO: implement authorgroup tag
         self.revhistory = [];
 
 
@@ -205,7 +222,7 @@ class docinfo:
         strpattern_start_tag = '.*^:revinfo:\s*\n';
         # This is how to find the revinfo items as one piece
         str_pattern_block_content = '(^[v][0-9\.]+[,][^:]+:[^\n]*(?:\n[^:][^\n]+)*?)+' ;
-        # This is the end of the block (means a line begining by /// or :something: or one blank line
+        # This is the end of the block (means a line begining by /// or :something: or one blank line)
         str_pattern_end_of_block = '\n(?:\:\w+\:|/{3,}|\s*\n)';
         # These 3 blocks form a global pattern
         str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
@@ -256,6 +273,32 @@ class docinfo:
 ##        print global_rem;
 
 
+    def get_copyright_content(self, filecontent):
+        """ Extracts the copyright block from the content of the text
+        Input parameter:
+            filecontent: Content of the text file in a string
+        Returns: Nothing
+        """
+        # This is how to find the beginning of the block
+        strpattern_start_tag = '.*^:copyright:\s*\n*';
+        # This is how to find the data as one piece
+        str_pattern_block_content = '(?P<date>[^,]*)[,](?P<holder>.*?)' ;
+        # This is the end of the block (means a line begining by /// or :something: or one blank line)
+        str_pattern_end_of_block = '\n(?:\:\w+\:|/{3,}|\s*\n)';
+        # These 3 blocks form a global pattern
+        str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
+        regexinfo = re.compile(str_pattern_global, flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL);
+        if regexinfo.match(filecontent, re.MULTILINE) is None:
+            print("No copyright tag found");
+        else:
+            # If pattern matches, process data
+            ## print(regexinfo.search(filecontent).groupdict());
+            tmp_dict = regexinfo.search(filecontent).groupdict();
+            self.copyright.year = tmp_dict['date'].strip();
+            self.copyright.holder = tmp_dict['holder'].strip();
+            del(tmp_dict);
+
+
     def gen_xml_from_self(self, line_indent = ''):
         """ Generates the xml structure from the current object
         Input parameter:
@@ -263,18 +306,24 @@ class docinfo:
         Returns:
             An xml-formatted string
         """
+        ##TODO: implement these members too!
         # self.authorgroup = [];  # Not implemented yet
-        # self.copyright = [];    # Not implemented yet
         # self.legalnotice = [];  # Not implemented yet
         
         if not re.match('^\s*$', line_indent):
             line_indent = "";
         _result = "";
+
+        ## Generating copyright tag
+        _result += "\n"+ self.copyright.gen_xml_from_self(line_indent, ['year','holder']);
+
+        ## Generating revision history tags
         _result += "\n"+ line_indent +"<revhistory>";
         revision_items_list=['revnumber','date','authorinitials','revremark'];
         for revitem in self.revhistory:
             _result += "\n"+ revitem.gen_xml_from_self(line_indent + '\t', revision_items_list);
         _result += "\n"+ line_indent +"</revhistory>";
+        _result += "\n";
         return _result;
 
 
@@ -285,18 +334,7 @@ def usage():
 
 
 
-
-
-if __name__ == '__main__':    #run tests if called from command-line
-    print("# Usage explanations");
-    usage();
-    
-##    print("# ************** Unit tests... To be done. **************");
-##    print("# Testing the 'revision' class:");
-##    rev_item = revision();
-##    print("# A non customized revhistory class item");
-##    print rev_item.gen_xml_from_self('\t');
-
+def main():
     # Retrieving the data from the asciidoc text file
 ##  TODO: use the arguments of the scripts to get this
     input_filename = 'samples/test_asciidoc.txt';
@@ -307,6 +345,7 @@ if __name__ == '__main__':    #run tests if called from command-line
     # This does it globally and print the table of hashtables to the screen.
     doc_item = docinfo();
     doc_item.get_revinfo_block(str_in);
+    doc_item.get_copyright_content(str_in);
 
     # writing output to the target file name
     out_f = open(doc_item.gen_docinfo_filename(input_filename), 'w');
@@ -314,6 +353,20 @@ if __name__ == '__main__':    #run tests if called from command-line
     out_f.close();
 
     print("XML file generation ended.");
+
+
+if __name__ == '__main__':
+    main();
+    #run tests if called from command-line
+##    print("# Usage explanations");
+##    usage();
+    
+##    print("# ************** Unit tests... To be done. **************");
+##    print("# Testing the 'revision' class:");
+##    rev_item = revision();
+##    print("# A non customized revhistory class item");
+##    print rev_item.gen_xml_from_self('\t');
+
 
 
     # This is to check whether the generated xml conforms to the docbook's DTD
@@ -333,4 +386,4 @@ if __name__ == '__main__':    #run tests if called from command-line
 ##    dtd.freeDtd();
 ##    del dtd;
 ##    del ctxt;
-    
+    pass;
