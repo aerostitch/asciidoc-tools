@@ -9,11 +9,14 @@ Theses are the tools I develop to enhance my asciidoc experience
 Modifications history
 ~~~~~~~~~~~~~~~~~~~~~
 
+v0.4.0, Joseph HERLANT,2013-05-30: 
+  Adding the support for the legalnotice tag.
+  The "gen_xml_from_self" generic method now supports object members of type "list". 
 v0.3.1, Joseph HERLANT,2013-05-11: Comments formatting minor modifications.
 v0.3.0, Joseph HERLANT,2013-05-11: Adding the support of the copyright tag.
 v0.2.1, Joseph HERLANT,2013-04-28: An xml tag test had been forgotten in the last commit. Correcting it.
 v0.2.0, Joseph HERLANT,2013-04-28: 
- Creating abstract class to have only one function that generate xml for each subclasses
- representing an xml block.
+  Creating abstract class to have only one function that generate xml for each subclasses
+  representing an xml block.
 v0.1.1, Joseph HERLANT,2013-04-21: Minor corrections in the code to include the support of multiline
 v0.1.0, Joseph HERLANT,2013-04-14: Creation. Only the revhistory tags generation and parsing is available.

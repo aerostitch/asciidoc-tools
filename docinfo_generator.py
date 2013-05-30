@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
+'''
 This module generated the docinfo xml file from a text file formatted using asciidoc format.
 
 NOTE: This module is normally compatible python 2.6.6 (and later) and python3.
 
 IMPORTANT: None of the following blocks are mandatory.
 
-Revision history rules for an optimal docinfo generation:
----------------------------------------------------------
+Revision history rules for an optimal docinfo generation (revinfo tag)
+----------------------------------------------------------------------
 
 To extract the revision history data, put it in a comment block (more than 3 "/").
 
@@ -17,7 +17,7 @@ Begin the block with one line only containing ":revinfo:"
 Then for each revision history item is like this:
   -> a block begins with a "v" followed by the version number (only digits separated by a ".")
   -> followed by a ","
-  -> followed optionnally by the author's initals or name followed by a ","
+  -> followed optionally by the author's initials or name followed by a ","
   -> followed by the date of the modification
   -> followed by a ":"
   -> Then a bunch of lines for the comments over the remark
@@ -29,14 +29,25 @@ The revision history ends with either:
  -> a comment line (a line beginning by more than 3 "/")
  -> a new block header (a line beginning by a ":something:"
 
-Copyright rules for optimal docinfo generation:
------------------------------------------------
+Copyright rules for optimal docinfo generation (copyright tag)
+--------------------------------------------------------------
 
 To avoid any conflict with the asciidoc format, put the copyright in a comment block.
 
-Begin the block with a line begining with the ":copyright:" tag.
-Then write the date followed by coma (",") and the company or author's name.
+Begin the block with a line beginning with the ":copyright:" tag.
+Then write the date followed by comma (",") and the company or author's name.
 You can use multiple lines for this block, but the best practice is to put all in one line.
+
+
+Legal notice rules for optimal docinfo generation (legalnotice tag)
+-------------------------------------------------------------------
+
+To avoid any conflict with the asciidoc format, put the legalnotice block in a comment block.
+
+Begin the block with a line beginning with the ":legalnotice:" tag.
+Then write each paragraph that you want beginning them by a dot (".") as the very first character of the line.
+You can use multiple lines for each paragraph, but each new paragraph must begin with a dot.
+Don't separate paragraph by a blank line!
 
 Example of correctly interpreted block:
 ---------------------------------------
@@ -46,7 +57,7 @@ Example of correctly interpreted block:
 :revinfo:
 v1.2, Joseph HERLANT, 2013-02-22:
  These are my notes for 1.2 revision
- And a bunch of other infos
+ And a bunch of other informations
 v1.1, 2013-01-03:
  this is a test for v1.1
  You will notice that there is no author here...
@@ -54,6 +65,12 @@ v1.0.1, Jojo, 2013-01-01: All in one line sample. All comment is on one line!
 v1.0, JHE, 2013-01-02:
  Creation
  2nd line of modification remark...
+:legalnotice:
+.This is the first paragraph
+of the legal notice.
+. This is the second one!
+. The next one
+least but not last! :)
 //////
 
 
@@ -62,7 +79,7 @@ the HTML document using:
 `a2x -a docinfo -fxhtml test_asciidoc.txt`
 Or the PDF document using:
 `a2x -a docinfo -fxhtml test_asciidoc.txt`
-"""
+'''
 
 import re;
 from os import path;
@@ -71,25 +88,25 @@ __author__     = "Joseph HERLANT"
 __copyright__  = "Copyright 2013, Joseph HERLANT"
 __credits__    = ["Joseph HERLANT"]
 __license__    = "GPL"
-__version__    = "0.3.1"
+__version__    = "0.4.0"
 __maintainer__ = "Joseph HERLANT"
-__email__      = "josephherlantj@free.fr"
+__email__      = "herlantj@gmail.com"
 __status__     = "Development"
 
 
 class docinfoitem(object):
-    """ This is an abstract class from what each class used to generate xml groups will inherit.
-    """
+    ''' This is an abstract class from what each class used to generate xml groups will inherit.
+    '''
     def __init__(self):
-        """ As it is an abstract class, it cannot be implemented directly. """
+        ''' As it is an abstract class, it cannot be implemented directly. '''
         raise AbstractClassError;
     
     def gen_xml_from_self(self, line_indent = '', ordered_list = []):
-        """ Generates the xml structure from the current object using the following method:
+        ''' Generates the xml structure from the current object using the following method:
             - The top-level object xml tag will have the name of the class
             - Each sub objects xml tag will have the name of a member and its value
 
-!!!!!!!!!!! WARNING: This will work only on non complex objects (only str or numeric members)
+        WARNING: This will work only on non complex objects (only str, list of str, or numeric members)
         
         Input parameter:
            - line_indent is either one or more tab, whitespace or alike
@@ -98,7 +115,7 @@ class docinfoitem(object):
                and for filtering.
         Returns:
             - An xml-formatted string
-        """
+        '''
         # Cleaning up given indentation
         if not re.match('^\s*$', line_indent):
             line_indent = "";
@@ -113,77 +130,81 @@ class docinfoitem(object):
         for k in ordered_list:
             # For each member of the class, transform it to an xml tag if exists as a member of the class
             if k in self.__dict__.keys():
-                _result += "\n"+ line_indent +"\t<"+ k +"><![CDATA["+ self.__dict__[k] +"]]></"+ k +">";
+                if(type( self.__dict__[k] ) == list):
+                   for list_item in self.__dict__[k]:
+                       _result += "\n"+ line_indent +"\t<"+ k +"><![CDATA["+ list_item +"]]></"+ k +">";
+                else:
+                    _result += "\n"+ line_indent +"\t<"+ k +"><![CDATA["+ self.__dict__[k] +"]]></"+ k +">";
             else:
                 print("WARNING: The given key named \""+ k + "\" does not exists as a member of the class.");
         _result += "\n"+ line_indent +"</"+ self.__class__.__name__ +">";
         return _result;
     
 ## TODO: implement this class
-##class legalnotice(docinfoitem):
-##    """ Subclass containing legal notice data for the legalnotice tag.
-##    Inherits from docinfoitem abstract class.
-##    """
-##    def __init__(self):
-##        """ Class constructor... Initializing inner variables
-##        Input parameter: Nothing
-##        Returns: Nothing
-##        """
-##        # Each item of a simpara is a paragraph at the end
-##        self.simpara = [];
+class legalnotice(docinfoitem):
+    ''' Subclass containing legal notice data for the legalnotice tag.
+    Inherits from docinfoitem abstract class.
+    '''
+    def __init__(self):
+        ''' Class constructor... Initializing inner variables
+        Input parameter: Nothing
+        Returns: Nothing
+        '''
+        # Each item of a simpara is a paragraph in the end
+        self.simpara = [];
 
 
 class copyright(docinfoitem):
-    """ Subclass containing copyright data for the copyright tag.
+    ''' Subclass containing copyright data for the copyright tag.
     Inherits from docinfoitem abstract class.
-    """
+    '''
     def __init__(self):
-        """ Class constructor... Initializing inner variables
+        ''' Class constructor... Initializing inner variables
         Input parameter: Nothing
         Returns: Nothing
-        """
+        '''
         self.year = "1970";
         self.holder = "";
 
 
 ## TODO: Add author and editor classes...
 ##class author(docinfoitem):
-##    """ Subclass containing copyright data for the copyright tag.
+##    ''' Subclass containing copyright data for the copyright tag.
 ##    Inherits from docinfoitem abstract class.
-##    """
+##    '''
 ##    def __init__(self):
-##        """ Class constructor... Initializing inner variables
+##        ''' Class constructor... Initializing inner variables
 ##        Input parameter: Nothing
 ##        Returns: Nothing
-##        """
+##        '''
 ##        self.honorific = "";
 ##        self.firstname = "";
 ##        self.surname = "";
 ##        self.othername = {'role':'test'};
 ##        self.affiliation = affiliation();
 ##    class affiliation(docinfoitem):
-##        """ Subclass containing copyright data for the copyright tag.
+##        ''' Subclass containing copyright data for the copyright tag.
 ##        Inherits from docinfoitem abstract class.
-##        """
+##        '''
 ##        def __init__(self):
-##            """ Class constructor... Initializing inner variables
+##            ''' Class constructor... Initializing inner variables
 ##            Input parameter: Nothing
 ##            Returns: Nothing
-##            """
+##            '''
 ##            self.shortaffil = "";
 ##            self.jobtitle = "";
 ##            self.orgname = "";
 ##            self.orgdiv = "";
 
 class revision(docinfoitem):
-    """ Subclass containing revision data for the revhistory tag.
+    ''' Subclass containing revision data for the revhistory tag.
     Inherits from docinfoitem abstract class.
-    """
+    '''
     def __init__(self):
-        """ Class constructor... Initializing inner variables
+        ''' Class constructor... Initializing inner variables
         Input parameter: Nothing
         Returns: Nothing
-        """
+        '''
         self.revnumber = "0";
         self.date = "0000-00-00";
         self.authorinitials = "";
@@ -192,35 +213,35 @@ class revision(docinfoitem):
 
     
 class docinfo:
-    """ A class that will handle docinfo data """
+    ''' A class that will handle docinfo data '''
     def __init__(self):
-        """ Class constructor... Initializing inner variables
+        ''' Class constructor... Initializing inner variables
         Input parameter: Nothing
         Returns: Nothing
-        """
+        '''
         self.authorgroup = [];  ## TODO: implement authorgroup tag
         self.copyright = copyright();
-        self.legalnotice = [];  ## TODO: implement authorgroup tag
+        self.legalnotice = legalnotice();
         self.revhistory = [];
 
 
     def gen_docinfo_filename(self, text_file_name):
-        """ Generates the output xml file for the docinfo module
+        ''' Generates the output xml file for the docinfo module
         based on the file name
         Input parameter:
             text_file_name: name of the file to use as a base
         Returns:
             The name of the xml file to use with the docinfo norms
-        """
+        '''
         return path.splitext(text_file_name)[0] + '-docinfo.xml';
 
 
     def get_revinfo_block(self, filecontent):
-        """ Extracts the revinfo block from the content of the text
+        ''' Extracts the revinfo block from the content of the text
         Input parameter:
             filecontent: Content of the text file in a string
         Returns: Nothing
-        """
+        '''
 
         # This is how to find the beginning of the block
         strpattern_start_tag = '.*^:revinfo:\s*\n';
@@ -240,12 +261,12 @@ class docinfo:
 
 
     def get_revision_items(self,revinfo_block):
-        """ Extracts each revision history item from a revinfo block
+        ''' Extracts each revision history item from a revinfo block
         and populate the revhistory self table with the items found
         Input parameter:
             revinfo_block: A revision history block extracted from a file content
         Returns: nothing
-        """
+        '''
 
         # First part retrieves the revision items in an array of hashtables
         str_pattern_rev = "^v(?P<revision>[0-9\.]*)[,](?P<modifier>[^,]+[,])?(?P<daterev>[^\:]*)[:](?P<remarks>.*).*";
@@ -278,11 +299,11 @@ class docinfo:
 
 
     def get_copyright_content(self, filecontent):
-        """ Extracts the copyright block from the content of the text
+        ''' Extracts the copyright block from the content of the text
         Input parameter:
             filecontent: Content of the text file in a string
         Returns: Nothing
-        """
+        '''
         # This is how to find the beginning of the block
         strpattern_start_tag = '.*^:copyright:\s*\n*';
         # This is how to find the data as one piece
@@ -302,14 +323,41 @@ class docinfo:
             self.copyright.holder = tmp_dict['holder'].strip();
             del(tmp_dict);
 
+    def get_legalnotice_content(self, filecontent):
+        ''' Extracts the legal notice block from the content of the text
+        Input parameter:
+            filecontent: Content of the text file in a string
+        Returns: Nothing
+        '''
+        # This is how to find the beginning of the block
+        strpattern_start_tag = '.*^:legalnotice:\s*\n*';
+        # This is how to find the data as one piece
+        str_pattern_block_content = '(?P<simparas>^\..*?)' ;
+        # This is the end of the block (means a line begining by /// or :something: or one blank line)
+        str_pattern_end_of_block = '\n(?:\:\w+\:|/{3,}|\s*\n)';
+        # These 3 blocks form a global pattern
+        str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
+        regexinfo = re.compile(str_pattern_global, flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL);
+        if regexinfo.match(filecontent, re.MULTILINE) is None:
+            print("No legal notice tag found");
+        else:
+            # If pattern matches, process data
+            ## print(regexinfo.search(filecontent).groupdict());
+            tmp_dict = regexinfo.search(filecontent).groupdict();
+            ## print(tmp_dict['simparas'].strip().split("\n."));
+            for tmp_item in tmp_dict['simparas'].strip().split("\n."):
+                ## print(tmp_item.lstrip('.').strip());
+                self.legalnotice.simpara.append(tmp_item.lstrip('.').strip());
+            del(tmp_dict);
+            del(tmp_item);
 
     def gen_xml_from_self(self, line_indent = ''):
-        """ Generates the xml structure from the current object
+        ''' Generates the xml structure from the current object
         Input parameter:
            line_indent is either one or more tab, whitespace or alike
         Returns:
             An xml-formatted string
-        """
+        '''
 ##        TODO: implement these members too!
         # self.authorgroup = [];  # Not implemented yet
         # self.legalnotice = [];  # Not implemented yet
@@ -320,6 +368,9 @@ class docinfo:
 
         # Generating copyright tag
         _result += "\n"+ self.copyright.gen_xml_from_self(line_indent, ['year','holder']);
+        
+        # generating legalnotice tag
+        _result += "\n"+ self.legalnotice.gen_xml_from_self(line_indent);
 
         # Generating revision history tags
         _result += "\n"+ line_indent +"<revhistory>";
@@ -340,7 +391,7 @@ def usage():
 
 def main():
     # Retrieving the data from the asciidoc text file
-##  TODO: use the arguments of the scripts to get this
+## TODO: use the arguments of the scripts to get this
     input_filename = 'samples/test_asciidoc.txt';
     f = open(input_filename, 'r');
     str_in = f.read();
@@ -350,6 +401,7 @@ def main():
     doc_item = docinfo();
     doc_item.get_revinfo_block(str_in);
     doc_item.get_copyright_content(str_in);
+    doc_item.get_legalnotice_content(str_in);
 
     # writing output to the target file name
     out_f = open(doc_item.gen_docinfo_filename(input_filename), 'w');
