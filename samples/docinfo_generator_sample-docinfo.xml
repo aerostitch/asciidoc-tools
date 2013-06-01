@@ -1,22 +1,16 @@
 
 
 <copyright>
-	<year><![CDATA[2009]]></year>
+	<year><![CDATA[2013]]></year>
 	<holder><![CDATA[Joseph HERLANT]]></holder>
 </copyright>
 
 <legalnotice>
-	<simpara><![CDATA[This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.]]></simpara>
-	<simpara><![CDATA[This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.]]></simpara>
-	<simpara><![CDATA[You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.]]></simpara>
+	<simpara><![CDATA[This is the first paragraph
+of the legal notice.]]></simpara>
+	<simpara><![CDATA[This is the second one!]]></simpara>
+	<simpara><![CDATA[The next one
+last but not least! :)]]></simpara>
 </legalnotice>
 <revhistory>
 
@@ -25,7 +19,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.]]></simpara>
 		<date><![CDATA[2013-02-22]]></date>
 		<authorinitials><![CDATA[Joseph HERLANT]]></authorinitials>
 		<revremark><![CDATA[These are my notes for 1.2 revision
- And a bunch of other infos]]></revremark>
+ And a bunch of other informations]]></revremark>
 	</revision>
 
 	<revision>

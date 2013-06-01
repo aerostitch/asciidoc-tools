@@ -3,8 +3,16 @@
 
 '''
 This module generated the docinfo xml file from a text file formatted using asciidoc format.
+The resulting file will contain only the following tags:
+ - rehistory     => tag for revision history table
+ - copyright     => tag that will contain the name of the copyright's owner and the date of the copyright
+ - legalnotice   => tag that will display the legal notice information
 
-NOTE: This module is normally compatible python 2.6.6 (and later) and python3.
+Command-line usage: docinfo_generator.py [-h] asciidoc_input_file_name
+
+[NOTE]
+This module is normally compatible python 2.6.6 (and later) 
+and python 3.2.3 (other versions of python3 not tested but should work).
 
 IMPORTANT: None of the following blocks are mandatory.
 
@@ -14,20 +22,23 @@ Revision history rules for an optimal docinfo generation (revinfo tag)
 To extract the revision history data, put it in a comment block (more than 3 "/").
 
 Begin the block with one line only containing ":revinfo:"
+
 Then for each revision history item is like this:
-  -> a block begins with a "v" followed by the version number (only digits separated by a ".")
-  -> followed by a ","
-  -> followed optionally by the author's initials or name followed by a ","
-  -> followed by the date of the modification
-  -> followed by a ":"
-  -> Then a bunch of lines for the comments over the remark
+
+  * a block begins with a "v" followed by the version number (only digits separated by a ".")
+  * followed by a ","
+  * followed optionally by the author's initials or name followed by a ","
+  * followed by the date of the modification
+  * followed by a ":"
+  * Then a bunch of lines for the comments over the remark
 
 *Do NOT put a blank line between the blocks.*
 
 The revision history ends with either:
- -> a blank line
- -> a comment line (a line beginning by more than 3 "/")
- -> a new block header (a line beginning by a ":something:"
+
+  * a blank line
+  * a comment line (a line beginning by more than 3 "/")
+  * a new block header (a line beginning by a ":something:"
 
 Copyright rules for optimal docinfo generation (copyright tag)
 --------------------------------------------------------------
@@ -70,28 +81,39 @@ v1.0, JHE, 2013-01-02:
 of the legal notice.
 . This is the second one!
 . The next one
-least but not last! :)
+last but not least! :)
 //////
 
 
 After running this script to generate the XML file, generate
 the HTML document using: 
-`a2x -a docinfo -fxhtml test_asciidoc.txt`
+`a2x -a docinfo -fxhtml <asciidoc file name>`
 Or the PDF document using:
-`a2x -a docinfo -fxhtml test_asciidoc.txt`
+`a2x -a docinfo -fxhtml <asciidoc file name>`
+
+
+[NOTE]
+As I am a beginner in python and in the development world,
+don't hesitate to send me the errors I could have made
+or the optimizations I could do.
+If you wish this script to be extended to include stuffs you would need,
+don't hesitate to send me also a mail.
+
+
 '''
 
-import re;
+import sys, argparse, re;
 from os import path;
 
 __author__     = "Joseph HERLANT"
 __copyright__  = "Copyright 2013, Joseph HERLANT"
 __credits__    = ["Joseph HERLANT"]
-__license__    = "GPL"
-__version__    = "0.4.0"
+__license__    = "GNU GPL"
+__version__    = "1.0.0"
 __maintainer__ = "Joseph HERLANT"
 __email__      = "herlantj@gmail.com"
-__status__     = "Development"
+__status__     = "Production"
+__website__    = "https://github.com/aerostitch/asciidoc-tools"
 
 
 class docinfoitem(object):
@@ -140,7 +162,7 @@ class docinfoitem(object):
         _result += "\n"+ line_indent +"</"+ self.__class__.__name__ +">";
         return _result;
     
-## TODO: implement this class
+
 class legalnotice(docinfoitem):
     ''' Subclass containing legal notice data for the legalnotice tag.
     Inherits from docinfoitem abstract class.
@@ -167,35 +189,6 @@ class copyright(docinfoitem):
         self.holder = "";
 
 
-## TODO: Add author and editor classes...
-##class author(docinfoitem):
-##    ''' Subclass containing copyright data for the copyright tag.
-##    Inherits from docinfoitem abstract class.
-##    '''
-##    def __init__(self):
-##        ''' Class constructor... Initializing inner variables
-##        Input parameter: Nothing
-##        Returns: Nothing
-##        '''
-##        self.honorific = "";
-##        self.firstname = "";
-##        self.surname = "";
-##        self.othername = {'role':'test'};
-##        self.affiliation = affiliation();
-##    class affiliation(docinfoitem):
-##        ''' Subclass containing copyright data for the copyright tag.
-##        Inherits from docinfoitem abstract class.
-##        '''
-##        def __init__(self):
-##            ''' Class constructor... Initializing inner variables
-##            Input parameter: Nothing
-##            Returns: Nothing
-##            '''
-##            self.shortaffil = "";
-##            self.jobtitle = "";
-##            self.orgname = "";
-##            self.orgdiv = "";
-
 class revision(docinfoitem):
     ''' Subclass containing revision data for the revhistory tag.
     Inherits from docinfoitem abstract class.
@@ -219,7 +212,6 @@ class docinfo:
         Input parameter: Nothing
         Returns: Nothing
         '''
-        self.authorgroup = [];  ## TODO: implement authorgroup tag
         self.copyright = copyright();
         self.legalnotice = legalnotice();
         self.revhistory = [];
@@ -358,9 +350,6 @@ class docinfo:
         Returns:
             An xml-formatted string
         '''
-##        TODO: implement these members too!
-        # self.authorgroup = [];  # Not implemented yet
-        # self.legalnotice = [];  # Not implemented yet
         
         if not re.match('^\s*$', line_indent):
             line_indent = "";
@@ -380,35 +369,54 @@ class docinfo:
         _result += "\n"+ line_indent +"</revhistory>";
         _result += "\n";
         return _result;
+    
+    def parse_document(self, doc_content):
+        self.get_revinfo_block(doc_content);
+        self.get_copyright_content(doc_content);
+        self.get_legalnotice_content(doc_content);
 
 
 def usage():
-    print(" *********************************** ");
+    print(" ***************** How to use this tool ****************** ");
     print(__doc__);
-    print(" *********************************** ");
+    print(" ********************************************************* ");
 
 
 
 def main():
-    # Retrieving the data from the asciidoc text file
-## TODO: use the arguments of the scripts to get this
-    input_filename = 'samples/test_asciidoc.txt';
-    f = open(input_filename, 'r');
-    str_in = f.read();
-    f.close();
+    # Initializing the file name container.
+    input_filename = '';
     
-    # This does it globally and print the table of hashtables to the screen.
-    doc_item = docinfo();
-    doc_item.get_revinfo_block(str_in);
-    doc_item.get_copyright_content(str_in);
-    doc_item.get_legalnotice_content(str_in);
-
-    # writing output to the target file name
-    out_f = open(doc_item.gen_docinfo_filename(input_filename), 'w');
-    out_f.write(doc_item.gen_xml_from_self(''));
-    out_f.close();
-
-    print("XML file generation ended.");
+    # Checking command line arguments
+    parser = argparse.ArgumentParser();
+    parser.add_argument('asciidoc_input_file_name', help='Asciidoc input file name.');
+    args = parser.parse_args();
+    input_filename = args.asciidoc_input_file_name;
+    del(args);
+    
+    # Proceed if file exists
+    if(len(input_filename) > 0 and path.isfile(input_filename)):
+        # Retrieving the data from the asciidoc text file
+        ## input_filename = 'samples/test_asciidoc.txt';
+        f = open(input_filename, 'r');
+        str_in = f.read();
+        f.close();
+        del(f);
+        
+        # This does it globally and print the table of hashtables to the screen.
+        doc_item = docinfo();
+        doc_item.parse_document(str_in);
+        
+        # writing output to the target file name
+        out_f = open(doc_item.gen_docinfo_filename(input_filename), 'w');
+        out_f.write(doc_item.gen_xml_from_self(''));
+        out_f.close();
+        ##    print("XML file generation ended.");
+    else:
+        print("[ERROR] No correct file name provided.");
+        usage();
+        print("[ERROR] No correct file name provided.");
+        sys.exit(2);
 
 
 if __name__ == '__main__':
@@ -426,20 +434,22 @@ if __name__ == '__main__':
 
 
     # This is to check whether the generated xml conforms to the docbook's DTD
-##    import libxml2;
-##    dtd="""<!ELEMENT foo EMPTY>"""
-##    instance=doc_item.gen_xml_from_self('');
-##    dtd = libxml2.parseDTD("-//OASIS//DTD DocBook XML V4//EN",None);
-##    ctxt = libxml2.newValidCtxt();
-##    doc = libxml2.parseDoc(instance);
-##    ret = doc.validateDtd(ctxt, dtd);
-##    if ret != 1:
-##        print("error doing DTD validation");
-##    else:
-##        print("Generated XML has a valid DTD!");
-##
-##    doc.freeDoc();
-##    dtd.freeDtd();
-##    del dtd;
-##    del ctxt;
+    #===========================================================================
+    # import libxml2;
+    # dtd="""<!ELEMENT foo EMPTY>"""
+    # # instance=doc_item.gen_xml_from_self('');
+    # dtd = libxml2.parseDTD("-//OASIS//DTD DocBook XML V4//EN",None);
+    # ctxt = libxml2.newValidCtxt();
+    # doc = libxml2.parseDoc(instance);
+    # ret = doc.validateDtd(ctxt, dtd);
+    # if ret != 1:
+    #     print("error doing DTD validation");
+    # else:
+    #     print("Generated XML has a valid DTD!");
+
+    # doc.freeDoc();
+    # dtd.freeDtd();
+    # del dtd;
+    # del ctxt;
+    #===========================================================================
     pass;

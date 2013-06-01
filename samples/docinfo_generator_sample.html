@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>asciidoc-tools</title><link rel="stylesheet" type="text/css" href="docbook-xsl.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.76.1" /></head><body><div xml:lang="en" class="article" title="asciidoc-tools" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="idm33024"></a>asciidoc-tools</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Joseph</span> <span class="surname">HERLANT</span></h3><code class="email">&lt;<a class="email" href="mailto:herlantj@gmail.com">herlantj@gmail.com</a>&gt;</code></div></div><div><p class="copyright">Copyright © 2013 Joseph HERLANT</p></div><div><div class="legalnotice" title="Legal Notice"><a id="idp120208"></a><p>This is the first paragraph
+of the legal notice.</p><p>This is the second one!</p><p>The next one
+last but not least! :)</p></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="3"><strong>Revision History</strong></th></tr><tr><td align="left">Revision 1.2</td><td align="left">2013-02-22</td><td align="left">Joseph HERLANT</td></tr><tr><td align="left" colspan="3">These are my notes for 1.2 revision
+ And a bunch of other informations</td></tr><tr><td align="left">Revision 1.1</td><td align="left">2013-01-03</td><td align="left"></td></tr><tr><td align="left" colspan="3">this is a test for v1.1
+ You will notice that there is no author here...</td></tr><tr><td align="left">Revision 1.0.1</td><td align="left">2013-01-01</td><td align="left">Jojo</td></tr><tr><td align="left" colspan="3">All in one line sample. All comment is on one line!</td></tr><tr><td align="left">Revision 1.0</td><td align="left">2013-01-02</td><td align="left">JHE</td></tr><tr><td align="left" colspan="3">Creation
+ 2nd line of modification remark...</td></tr></table></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl><dt><span class="section"><a href="#_docinfo_generator_module">1. "docinfo_generator" module</a></span></dt><dd><dl><dt><span class="section"><a href="#_modifications_history">1.1. Modifications history</a></span></dt><dt><span class="section"><a href="#_using_the_docinfo_generator">1.2. Using the docinfo_generator</a></span></dt></dl></dd></dl></div><div class="section" title="1. &quot;docinfo_generator&quot; module"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_docinfo_generator_module"></a>1. "docinfo_generator" module</h2></div></div></div><div class="section" title="1.1. Modifications history"><div class="titlepage"><div><div><h3 class="title"><a id="_modifications_history"></a>1.1. Modifications history</h3></div></div></div><pre class="literallayout">v1.0.0, Joseph HERLANT, 2013-06-01:
+  As I don't have the utility of using the authorgroup tag (and that it is not rendered on PDF files), I didn't implement it.
+  But if it is needed, don't hesitate to send me an email.
+  Last change to get to 1.0.0 version: pass the source file name as an argument to the script.
+v0.4.0, Joseph HERLANT, 2013-05-30:
+  Adding the support for the legalnotice tag.
+  The "gen_xml_from_self" generic method now supports object members of type "list".
+v0.3.1, Joseph HERLANT, 2013-05-11: Comments formatting minor modifications.
+v0.3.0, Joseph HERLANT, 2013-05-11: Adding the support of the copyright tag.
+v0.2.1, Joseph HERLANT, 2013-04-28: An xml tag test had been forgotten in the last commit. Correcting it.
+v0.2.0, Joseph HERLANT, 2013-04-28:
+  Creating abstract class to have only one function that generate xml for each subclasses
+  representing an xml block.
+v0.1.1, Joseph HERLANT, 2013-04-21: Minor corrections in the code to include the support of multiline
+v0.1.0, Joseph HERLANT, 2013-04-14: Creation. Only the revhistory tags generation and parsing is available.</pre></div><div class="section" title="1.2. Using the docinfo_generator"><div class="titlepage"><div><div><h3 class="title"><a id="_using_the_docinfo_generator"></a>1.2. Using the docinfo_generator</h3></div></div></div><p>This module generated the docinfo xml file from a text file formatted using asciidoc format.</p><p>The resulting file will contain only the following tags:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+revinfo       ⇒ tag for revision history table
+</li><li class="listitem">
+copyright     ⇒ tag that will contain the name of the copyright’s owner and the date of the copyright
+</li><li class="listitem">
+legalnotice   ⇒ tag that will display the legal notice information
+</li></ul></div><p>Command-line usage: <code class="literal">docinfo_generator.py [-h] asciidoc_input_file_name</code></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><h3 class="title">Note</h3><p>This module is normally compatible python 2.6.6 (and later)
+and python 3.2.3 (other versions of python3 not tested but should work).</p></div><div class="important" title="Important" style="margin-left: 0; margin-right: 10%;"><h3 class="title">Important</h3><p>None of the following blocks are mandatory.</p></div><div class="section" title="Revision history rules for an optimal docinfo generation (revinfo tag)"><div class="titlepage"><div><div><h4 class="title"><a id="_revision_history_rules_for_an_optimal_docinfo_generation_revinfo_tag"></a>Revision history rules for an optimal docinfo generation (revinfo tag)</h4></div></div></div><p>To extract the revision history data, put it in a comment block (more than 3 "/").</p><p>Begin the block with one line only containing ":revinfo:"</p><p>Then for each revision history item is like this:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+a block begins with a "v" followed by the version number (only digits separated by a ".")
+</li><li class="listitem">
+followed by a ","
+</li><li class="listitem">
+followed optionally by the author’s initials or name followed by a ","
+</li><li class="listitem">
+followed by the date of the modification
+</li><li class="listitem">
+followed by a ":"
+</li><li class="listitem">
+Then a bunch of lines for the comments over the remark
+</li></ul></div><p><span class="strong"><strong>Do NOT put a blank line between the blocks.</strong></span></p><p>The revision history ends with either:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+a blank line
+</li><li class="listitem">
+a comment line (a line beginning by more than 3 "/")
+</li><li class="listitem">
+a new block header (a line beginning by a ":something:"
+</li></ul></div></div><div class="section" title="Copyright rules for optimal docinfo generation (copyright tag)"><div class="titlepage"><div><div><h4 class="title"><a id="_copyright_rules_for_optimal_docinfo_generation_copyright_tag"></a>Copyright rules for optimal docinfo generation (copyright tag)</h4></div></div></div><p>To avoid any conflict with the asciidoc format, put the copyright in a comment block.</p><p>Begin the block with a line beginning with the ":copyright:" tag.</p><p>Then write the date followed by comma (",") and the company or author’s name.</p><p>You can use multiple lines for this block, but the best practice is to put all in one line.</p></div><div class="section" title="Legal notice rules for optimal docinfo generation (legalnotice tag)"><div class="titlepage"><div><div><h4 class="title"><a id="_legal_notice_rules_for_optimal_docinfo_generation_legalnotice_tag"></a>Legal notice rules for optimal docinfo generation (legalnotice tag)</h4></div></div></div><p>To avoid any conflict with the asciidoc format, put the legalnotice block in a comment block.</p><p>Begin the block with a line beginning with the ":legalnotice:" tag.</p><p>Then write each paragraph that you want beginning them by a dot (".") as the very first character of the line.</p><p>You can use multiple lines for each paragraph, but each new paragraph must begin with a dot.</p><div class="important" title="Important" style="margin-left: 0; margin-right: 10%;"><h3 class="title">Important</h3><p>Don’t separate paragraph by a blank line!</p></div></div><div class="section" title="Example of correctly interpreted block:"><div class="titlepage"><div><div><h4 class="title"><a id="_example_of_correctly_interpreted_block"></a>Example of correctly interpreted block:</h4></div></div></div><pre class="screen">//////
+:copyright:2013,Joseph HERLANT
+:revinfo:
+v1.2, Joseph HERLANT, 2013-02-22:
+ These are my notes for 1.2 revision
+ And a bunch of other informations
+v1.1, 2013-01-03:
+ this is a test for v1.1
+ You will notice that there is no author here...
+v1.0.1, Jojo, 2013-01-01: All in one line sample. All comment is on one line!
+v1.0, JHE, 2013-01-02:
+ Creation
+ 2nd line of modification remark...
+:legalnotice:
+.This is the first paragraph
+of the legal notice.
+. This is the second one!
+. The next one
+last but not least! :)
+//////</pre><p>After running this script to generate the XML file, generate
+the HTML document using:
+<code class="literal">a2x -a docinfo -fxhtml &lt;asciidoc file name&gt;</code>
+Or the PDF document using:
+<code class="literal">a2x -a docinfo -fxhtml &lt;asciidoc file name&gt;</code></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><h3 class="title">Note</h3><p>As I am a beginner in python and in the development world,
+don’t hesitate to send me the errors I could have made
+or the optimizations I could do.
+If you wish this script to be extended to include stuffs you would need,
+don’t hesitate to send me also a mail.</p></div></div></div></div></div></body></html>
