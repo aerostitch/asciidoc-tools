@@ -9,7 +9,6 @@ These are the tools I develop to enhance my asciidoc experience
 Modifications history
 ~~~~~~~~~~~~~~~~~~~~~
 
-....
 v1.0.0, Joseph HERLANT, 2013-06-01:
   As I don't have the utility of using the authorgroup tag (and that it is not rendered on PDF files), I didn't implement it.
   But if it is needed, don't hesitate to send me an email.
@@ -25,7 +24,7 @@ v0.2.0, Joseph HERLANT, 2013-04-28:
   representing an xml block.
 v0.1.1, Joseph HERLANT, 2013-04-21: Minor corrections in the code to include the support of multiline
 v0.1.0, Joseph HERLANT, 2013-04-14: Creation. Only the revhistory tags generation and parsing is available.
-....
+
 
 Using the docinfo_generator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
