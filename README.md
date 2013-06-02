@@ -1,17 +1,5 @@
 asciidoc-tools
 ==============
-Joseph HERLANT <herlantj@gmail.com>
-:Author Initials: Joseph HERLANT
-:toc:
-:toclevels: 3
-:doctype: article
-:data-uri:
-:iconsdir: /usr/share/asciidoc/images/icons
-:icons:
-:numbered:
-:lang: en
-:encoding: UTF-8
-:website: https://github.com/aerostitch/asciidoc-tools
 
 These are the tools I develop to enhance my asciidoc experience
 
@@ -51,14 +39,13 @@ The resulting file will contain only the following tags:
 
 Command-line usage: `docinfo_generator.py [-h] asciidoc_input_file_name`
 
-[NOTE]
-This module is normally compatible python 2.6.6 (and later) 
+NOTE: This module is normally compatible python 2.6.6 (and later) 
 and python 3.2.3 (other versions of python3 not tested but should work).
 
 IMPORTANT: None of the following blocks are mandatory.
 
 Revision history rules for an optimal docinfo generation (revinfo tag)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To extract the revision history data, put it in a comment block (more than 3 "/").
 
@@ -82,7 +69,7 @@ The revision history ends with either:
   * a new block header (a line beginning by a ":something:"
 
 Copyright rules for optimal docinfo generation (copyright tag)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To avoid any conflict with the asciidoc format, put the copyright in a comment block.
 
@@ -94,7 +81,7 @@ You can use multiple lines for this block, but the best practice is to put all i
 
 
 Legal notice rules for optimal docinfo generation (legalnotice tag)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To avoid any conflict with the asciidoc format, put the legalnotice block in a comment block.
 
@@ -107,7 +94,7 @@ You can use multiple lines for each paragraph, but each new paragraph must begin
 IMPORTANT: Don't separate paragraph by a blank line!
 
 Example of correctly interpreted block:
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ----
 
@@ -141,9 +128,9 @@ Or the PDF document using:
 `a2x -a docinfo -fxhtml <asciidoc file name>`
 
 
-[NOTE]
-As I am a beginner in python and in the development world,
+NOTE: As I am a beginner in python and in the development world,
 don't hesitate to send me the errors I could have made
 or the optimizations I could do.
-If you wish this script to be extended to include stuffs you would need,
+
+NOTE: If you wish this script to be extended to include stuffs you would need,
 don't hesitate to send me also a mail.
