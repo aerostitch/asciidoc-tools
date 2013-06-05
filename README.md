@@ -10,6 +10,9 @@ These are the tools I develop to enhance my asciidoc experience
 --------------------------
 
 ~~~~~
+v1.0.1, Laurent LICOUR, 2013-06-05:
+  Correcting documentation.
+  If attributes were absent, the document did not generate. This is corrected now.
 v1.0.0, Joseph HERLANT, 2013-06-01:
   As I don't have the utility of using the authorgroup tag (and that it is not rendered on PDF files), I didn't implement it.
   But if it is needed, don't hesitate to send me an email.
