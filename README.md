@@ -129,7 +129,7 @@ the HTML document using:
 
 Or the PDF document using:
 
-`a2x -a docinfo -fxhtml <asciidoc file name>`
+`a2x -a docinfo -fpdf <asciidoc file name>`
 
 
 NOTE: As I am a beginner in python and in the development world,

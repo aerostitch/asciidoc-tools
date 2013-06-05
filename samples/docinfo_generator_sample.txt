@@ -40,7 +40,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 Generate in HTML using: 
 a2x -a docinfo -fxhtml test_asciidoc.txt 
 or in pdf format using:
-a2x -a docinfo -fxhtml test_asciidoc.txt 
+a2x -a docinfo -fpdf test_asciidoc.txt 
 //////
 
 "docinfo_generator" module
@@ -166,7 +166,7 @@ After running this script to generate the XML file, generate
 the HTML document using: 
 `a2x -a docinfo -fxhtml <asciidoc file name>`
 Or the PDF document using:
-`a2x -a docinfo -fxhtml <asciidoc file name>`
+`a2x -a docinfo -fpdf <asciidoc file name>`
 
 
 [NOTE]

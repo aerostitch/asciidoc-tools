@@ -89,7 +89,7 @@ After running this script to generate the XML file, generate
 the HTML document using: 
 `a2x -a docinfo -fxhtml <asciidoc file name>`
 Or the PDF document using:
-`a2x -a docinfo -fxhtml <asciidoc file name>`
+`a2x -a docinfo -fpdf <asciidoc file name>`
 
 
 [NOTE]
@@ -355,19 +355,24 @@ class docinfo:
             line_indent = "";
         _result = "";
 
-        # Generating copyright tag
-        _result += "\n"+ self.copyright.gen_xml_from_self(line_indent, ['year','holder']);
+        if self.copyright.holder:
+            # Generating copyright tag
+            _result += "\n"+ self.copyright.gen_xml_from_self(line_indent, ['year','holder']);
         
-        # generating legalnotice tag
-        _result += "\n"+ self.legalnotice.gen_xml_from_self(line_indent);
+        if self.legalnotice.simpara:
+            # generating legalnotice tag
+            _result += "\n"+ self.legalnotice.gen_xml_from_self(line_indent);
 
-        # Generating revision history tags
-        _result += "\n"+ line_indent +"<revhistory>";
-        revision_items_list=['revnumber','date','authorinitials','revremark'];
-        for revitem in self.revhistory:
-            _result += "\n"+ revitem.gen_xml_from_self(line_indent + '\t', revision_items_list);
-        _result += "\n"+ line_indent +"</revhistory>";
-        _result += "\n";
+ 
+        if self.revhistory:
+            # Generating revision history tags
+            _result += "\n"+ line_indent +"<revhistory>";
+            revision_items_list=['revnumber','date','authorinitials','revremark'];
+            for revitem in self.revhistory:
+                _result += "\n"+ revitem.gen_xml_from_self(line_indent + '\t', revision_items_list);
+            _result += "\n"+ line_indent +"</revhistory>";
+            _result += "\n";
+
         return _result;
     
     def parse_document(self, doc_content):
