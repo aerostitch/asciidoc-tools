@@ -109,12 +109,13 @@ __author__     = "Joseph HERLANT"
 __copyright__  = "Copyright 2013, Joseph HERLANT"
 __credits__    = ["Joseph HERLANT"]
 __license__    = "GNU GPL"
-__version__    = "1.0.0"
+__version__    = "1.0.2"
 __maintainer__ = "Joseph HERLANT"
 __email__      = "herlantj@gmail.com"
 __status__     = "Production"
 __website__    = "https://github.com/aerostitch/asciidoc-tools"
 
+VERBOSE=0;
 
 class docinfoitem(object):
     ''' This is an abstract class from what each class used to generate xml groups will inherit.
@@ -389,38 +390,50 @@ def usage():
 
 
 def main():
+    global VERBOSE;
     # Initializing the file name container.
     input_filename = '';
     
     # Checking command line arguments
     parser = argparse.ArgumentParser();
+    parser.add_argument('-v', '--verbose', action='count', help='Prints out more information during the processing status.');
+    # parser.add_argument('--usage', action='store_true', help='Prints out the doc of this tool');
     parser.add_argument('asciidoc_input_file_name', help='Asciidoc input file name.');
     args = parser.parse_args();
+    VERBOSE=args.verbose; # This is to be able to enable multiple levels of verbosity
+    # if(args.usage): usage();
     input_filename = args.asciidoc_input_file_name;
     del(args);
     
     # Proceed if file exists
     if(len(input_filename) > 0 and path.isfile(input_filename)):
         # Retrieving the data from the asciidoc text file
-        ## input_filename = 'samples/test_asciidoc.txt';
+	if(VERBOSE > 0):
+             print("[INFO] File found.");
         f = open(input_filename, 'r');
         str_in = f.read();
         f.close();
         del(f);
         
+	if(VERBOSE > 0):
+             print("[INFO] Parsing document content.");
         # This does it globally and print the table of hashtables to the screen.
         doc_item = docinfo();
         doc_item.parse_document(str_in);
         
+	if(VERBOSE > 0):
+             print("[INFO] Begining XML file generation.");
         # writing output to the target file name
         out_f = open(doc_item.gen_docinfo_filename(input_filename), 'w');
         out_f.write(doc_item.gen_xml_from_self(''));
         out_f.close();
-        ##    print("XML file generation ended.");
+	if(VERBOSE > 0):
+            print("[INFO] XML file generation ended.");
     else:
         print("[ERROR] No correct file name provided.");
-        usage();
-        print("[ERROR] No correct file name provided.");
+	if(VERBOSE > 0):
+            usage();
+            print("[ERROR] No correct file name provided.");
         sys.exit(2);
 
 
