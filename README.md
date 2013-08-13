@@ -10,6 +10,7 @@ These are the tools I develop to enhance my asciidoc experience
 --------------------------
 
 ~~~~~
+v1.0.2, Joseph HERLANT, 2013-07-05: Adding a verbose flag to show more informations while processing data.
 v1.0.1, Laurent LICOUR, 2013-06-05:
   Correcting documentation.
   If attributes were absent, the document did not generate. This is corrected now.

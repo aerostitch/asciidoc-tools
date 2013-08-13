@@ -1,0 +1,21 @@
+Customizing front page and footer pages in asciidoc
+===================================================
+Joseph HERLANT <herlantj@gmail.com>
+
+:Author Initials: Joseph HERLANT
+:toc:
+:data-uri:
+:icons:
+:numbered:
+:lang: en
+:encoding: UTF-8
+:website: https://github.com/aerostitch/asciidoc-tools
+
+This is a test of changing the titlepage with dblatex on asciidoc.
+The change of the footer is also done here.
+Everything interesting for this is in the *.sty file.
+Generate this using:
+-----
+a2x -fpdf -L /PATH/TO/ASCIIDOC/TEXT/FILE --dblatex-opts="-p /PATH/TO/CUSTOM/XSL/STYLESHEET -s /PATH/TO/CUSTOM/STY/STYLESHEET" 
+-----
+
