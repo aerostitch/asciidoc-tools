@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 
 '''
-This module generated the docinfo xml file from a text file formatted using asciidoc format.
+This module generated the docinfo xml file from a text file 
+formatted using asciidoc format.
 The resulting file will contain only the following tags:
  - rehistory     => tag for revision history table
- - copyright     => tag that will contain the name of the copyright's owner and the date of the copyright
+ - copyright     => tag that will contain the name of 
+                    the copyright's owner and the date of the copyright
  - legalnotice   => tag that will display the legal notice information
 
 Command-line usage: docinfo_generator.py [-h] asciidoc_input_file_name
@@ -19,13 +21,14 @@ IMPORTANT: None of the following blocks are mandatory.
 Revision history rules for an optimal docinfo generation (revinfo tag)
 ----------------------------------------------------------------------
 
-To extract the revision history data, put it in a comment block (more than 3 "/").
+To extract the revision history data, 
+put it in a comment block (more than 3 "/").
 
 Begin the block with one line only containing ":revinfo:"
 
 Then for each revision history item is like this:
 
-  * a block begins with a "v" followed by the version number (only digits separated by a ".")
+  * a block begins with a "v" followed by the version nbr (only digits and ".")
   * followed by a ","
   * followed optionally by the author's initials or name followed by a ","
   * followed by the date of the modification
@@ -43,21 +46,26 @@ The revision history ends with either:
 Copyright rules for optimal docinfo generation (copyright tag)
 --------------------------------------------------------------
 
-To avoid any conflict with the asciidoc format, put the copyright in a comment block.
+To avoid any conflict with the asciidoc format, 
+put the copyright in a comment block.
 
 Begin the block with a line beginning with the ":copyright:" tag.
 Then write the date followed by comma (",") and the company or author's name.
-You can use multiple lines for this block, but the best practice is to put all in one line.
+You can use multiple lines for this block, 
+but the best practice is to put all in one line.
 
 
 Legal notice rules for optimal docinfo generation (legalnotice tag)
 -------------------------------------------------------------------
 
-To avoid any conflict with the asciidoc format, put the legalnotice block in a comment block.
+To avoid any conflict with the asciidoc format, 
+put the legalnotice block in a comment block.
 
 Begin the block with a line beginning with the ":legalnotice:" tag.
-Then write each paragraph that you want beginning them by a dot (".") as the very first character of the line.
-You can use multiple lines for each paragraph, but each new paragraph must begin with a dot.
+Then write each paragraph that you want beginning them by 
+a dot (".") as the very first character of the line.
+You can use multiple lines for each paragraph, 
+but each new paragraph must begin with a dot.
 Don't separate paragraph by a blank line!
 
 Example of correctly interpreted block:
@@ -102,8 +110,8 @@ don't hesitate to send me also a mail.
 
 '''
 
-import sys, argparse, re;
-from os import path;
+import sys, argparse, re
+from os import path
 
 __author__     = "Joseph HERLANT"
 __copyright__  = "Copyright 2013, Joseph HERLANT"
@@ -116,15 +124,17 @@ __status__     = "Production"
 __website__    = "https://github.com/aerostitch/asciidoc-tools"
 
 
-class docinfoitem(object):
-    ''' This is an abstract class from what each class used to generate xml groups will inherit.
+class Docinfoitem(object):
+    ''' This is an abstract class from what each class used to 
+        generate xml groups will inherit.
     '''
     def __init__(self):
         ''' As it is an abstract class, it cannot be implemented directly. '''
-        raise AbstractClassError;
+        print "This is an abstract class. It has not to be implemented"
+        raise
     
     def gen_xml_from_self(self, line_indent = '', ordered_list = []):
-        ''' Generates the xml structure from the current object using the following method:
+        ''' Generates xml structure from current object using: 
             - The top-level object xml tag will have the name of the class
             - Each sub objects xml tag will have the name of a member and its value
 
@@ -139,33 +149,35 @@ class docinfoitem(object):
             - An xml-formatted string
         '''
         # Cleaning up given indentation
-        if not re.match('^\s*$', line_indent):
-            line_indent = "";
+        if not re.match(r"^\s*$", line_indent):
+            line_indent = ""
 
         # Initializing given list if not already done
         if ordered_list == []:
-##            print(self.__dict__);
+##            print(self.__dict__)
             ordered_list = self.__dict__.keys()
             
-        _result = "";
-        _result += "\n"+ line_indent +"<"+ self.__class__.__name__ +">";
+        _result = ""
+        _result += "\n"+ line_indent +"<"+ self.__class__.__name__ +">"
         for k in ordered_list:
-            # For each member of the class, transform it to an xml tag if exists as a member of the class
+            # For each member of the class, transform it to an xml tag if exists
             if k in self.__dict__.keys():
                 if(type( self.__dict__[k] ) == list):
-                   for list_item in self.__dict__[k]:
-                       _result += "\n"+ line_indent +"\t<"+ k +"><![CDATA["+ list_item +"]]></"+ k +">";
+                    for list_item in self.__dict__[k]:
+                        _result += "\n"+ line_indent +"\t<"+ k +">"
+                        _result += "<![CDATA["+ list_item +"]]></"+ k +">"
                 else:
-                    _result += "\n"+ line_indent +"\t<"+ k +"><![CDATA["+ self.__dict__[k] +"]]></"+ k +">";
+                    _result += "\n"+ line_indent +"\t<"+ k +">"
+                    _result += "<![CDATA["+ self.__dict__[k] +"]]></"+ k +">"
             else:
-                print("WARNING: The given key named \""+ k + "\" does not exists as a member of the class.");
-        _result += "\n"+ line_indent +"</"+ self.__class__.__name__ +">";
-        return _result;
+                print("WARNING: given key named \""+ k + "\" does not exists.")
+        _result += "\n"+ line_indent +"</"+ self.__class__.__name__ +">"
+        return _result
     
 
-class legalnotice(docinfoitem):
+class legalnotice(Docinfoitem):
     ''' Subclass containing legal notice data for the legalnotice tag.
-    Inherits from docinfoitem abstract class.
+    Inherits from Docinfoitem abstract class.
     '''
     def __init__(self):
         ''' Class constructor... Initializing inner variables
@@ -173,35 +185,35 @@ class legalnotice(docinfoitem):
         Returns: Nothing
         '''
         # Each item of a simpara is a paragraph in the end
-        self.simpara = [];
+        self.simpara = []
 
 
-class copyright(docinfoitem):
+class copyright(Docinfoitem):
     ''' Subclass containing copyright data for the copyright tag.
-    Inherits from docinfoitem abstract class.
+    Inherits from Docinfoitem abstract class.
     '''
     def __init__(self):
         ''' Class constructor... Initializing inner variables
         Input parameter: Nothing
         Returns: Nothing
         '''
-        self.year = "1970";
-        self.holder = "";
+        self.year = "1970"
+        self.holder = ""
 
 
-class revision(docinfoitem):
+class revision(Docinfoitem):
     ''' Subclass containing revision data for the revhistory tag.
-    Inherits from docinfoitem abstract class.
+    Inherits from Docinfoitem abstract class.
     '''
     def __init__(self):
         ''' Class constructor... Initializing inner variables
         Input parameter: Nothing
         Returns: Nothing
         '''
-        self.revnumber = "0";
-        self.date = "0000-00-00";
-        self.authorinitials = "";
-        self.revremark = "";
+        self.revnumber = "0"
+        self.date = "0000-00-00"
+        self.authorinitials = ""
+        self.revremark = ""
 
 
     
@@ -212,9 +224,9 @@ class docinfo:
         Input parameter: Nothing
         Returns: Nothing
         '''
-        self.copyright = copyright();
-        self.legalnotice = legalnotice();
-        self.revhistory = [];
+        self.copyright = copyright()
+        self.legalnotice = legalnotice()
+        self.revhistory = []
 
 
     def gen_docinfo_filename(self, text_file_name):
@@ -225,7 +237,7 @@ class docinfo:
         Returns:
             The name of the xml file to use with the docinfo norms
         '''
-        return path.splitext(text_file_name)[0] + '-docinfo.xml';
+        return path.splitext(text_file_name)[0] + '-docinfo.xml'
 
 
     def get_revinfo_block(self, filecontent):
@@ -236,23 +248,26 @@ class docinfo:
         '''
 
         # This is how to find the beginning of the block
-        strpattern_start_tag = '.*^:revinfo:\s*\n';
+        strpattern_start_tag = r'.*^:revinfo:\s*\n'
         # This is how to find the revinfo items as one piece
-        str_pattern_block_content = '(^[v][0-9\.]+[,][^:]+:[^\n]*(?:\n[^:][^\n]+)*?)+' ;
-        # This is the end of the block (means a line begining by /// or :something: or one blank line)
-        str_pattern_end_of_block = '\n(?:\:\w+\:|/{3,}|\s*\n)';
+        str_pattern_block = r'(^[v][0-9\.]+[,][^:]+:[^\n]*(?:\n[^:][^\n]+)*?)+' 
+        # This is the end of the block (means a line begining by ///
+        # or :something: or one blank line)
+        str_pattern_end_of_block = r'\n(?:\:\w+\:|/{3,}|\s*\n)'
         # These 3 blocks form a global pattern
-        str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
-        revinfo = re.compile(str_pattern_global, flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL);
+        str_pattern_global = strpattern_start_tag + str_pattern_block
+        str_pattern_global += str_pattern_end_of_block
+        revinfo = re.compile(str_pattern_global, 
+		flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL)
         if revinfo.match(filecontent, re.MULTILINE) is None:
-            print("No revInfo tag found");
+            print("No revInfo tag found")
         else:
             # If pattern matches, process data
-            revinfo_data = revinfo.search(filecontent).groups(0)[0];
-            self.get_revision_items(revinfo_data);
+            revinfo_data = revinfo.search(filecontent).groups(0)[0]
+            self.get_revision_items(revinfo_data)
 
 
-    def get_revision_items(self,revinfo_block):
+    def get_revision_items(self, revinfo_block):
         ''' Extracts each revision history item from a revinfo block
         and populate the revhistory self table with the items found
         Input parameter:
@@ -261,33 +276,34 @@ class docinfo:
         '''
 
         # First part retrieves the revision items in an array of hashtables
-        str_pattern_rev = "^v(?P<revision>[0-9\.]*)[,](?P<modifier>[^,]+[,])?(?P<daterev>[^\:]*)[:](?P<remarks>.*).*";
+        str_pattern_rev = r"^v(?P<revision>[0-9\.]*)[,](?P<modifier>[^,]+[,])?"\
+		r"(?P<daterev>[^\:]*)[:](?P<remarks>.*).*"
         rev = re.compile(str_pattern_rev, flags=re.UNICODE|re.IGNORECASE)
-        global_rem=[];
-        current_rem={};
+        global_rem = []
+        current_rem = {}
         for item in revinfo_block.split('\n'):
             if rev.match(item) is None:
-##                print("This is a remark line...");
-                current_rem['remarks'] += item + "\n";
+##                print("This is a remark line...")
+                current_rem['remarks'] += item + "\n"
             else:
                 if 'revision' in current_rem.keys():
-                    global_rem.append(current_rem);
-                current_rem = rev.search(item).groupdict();
-        global_rem.append(current_rem);
+                    global_rem.append(current_rem)
+                current_rem = rev.search(item).groupdict()
+        global_rem.append(current_rem)
 
-        # Second part transforms the array of hashtables in an array of revision objects
+        # Second part transforms the array of hash in an array of revision objs
         for remitem in global_rem:
-            cur_rev = revision();
-            cur_rev.revnumber = remitem['revision'].strip();
-            cur_rev.date = remitem['daterev'].strip();
+            cur_rev = revision()
+            cur_rev.revnumber = remitem['revision'].strip()
+            cur_rev.date = remitem['daterev'].strip()
             if remitem['modifier'] is None:
-                cur_rev.authorinitials = "";
+                cur_rev.authorinitials = ""
             else:
-                cur_rev.authorinitials = remitem['modifier'].strip().strip(',');
-            cur_rev.revremark = remitem['remarks'].strip();
-##            print cur_rev.gen_xml_from_self('\t');
-            self.revhistory.append(cur_rev);
-##        print global_rem;
+                cur_rev.authorinitials = remitem['modifier'].strip().strip(',')
+            cur_rev.revremark = remitem['remarks'].strip()
+##            print cur_rev.gen_xml_from_self('\t')
+            self.revhistory.append(cur_rev)
+##        print global_rem
 
 
     def get_copyright_content(self, filecontent):
@@ -297,23 +313,26 @@ class docinfo:
         Returns: Nothing
         '''
         # This is how to find the beginning of the block
-        strpattern_start_tag = '.*^:copyright:\s*\n*';
+        strpattern_start_tag = r'.*^:copyright:\s*\n*'
         # This is how to find the data as one piece
-        str_pattern_block_content = '(?P<date>[^,]*)[,](?P<holder>.*?)' ;
-        # This is the end of the block (means a line begining by /// or :something: or one blank line)
-        str_pattern_end_of_block = '\n(?:\:\w+\:|/{3,}|\s*\n)';
+        str_pattern_block_content = '(?P<date>[^,]*)[,](?P<holder>.*?)' 
+        # This is the end of the block (means a line begining by /// 
+	# or :something: or one blank line)
+        str_pattern_end_of_block = r'\n(?:\:\w+\:|/{3,}|\s*\n)'
         # These 3 blocks form a global pattern
-        str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
-        regexinfo = re.compile(str_pattern_global, flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL);
+        str_pattern_global = strpattern_start_tag + str_pattern_block_content
+        str_pattern_global += str_pattern_end_of_block
+        regexinfo = re.compile(str_pattern_global, 
+		flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL)
         if regexinfo.match(filecontent, re.MULTILINE) is None:
-            print("No copyright tag found");
+            print("No copyright tag found")
         else:
             # If pattern matches, process data
-##            print(regexinfo.search(filecontent).groupdict());
-            tmp_dict = regexinfo.search(filecontent).groupdict();
-            self.copyright.year = tmp_dict['date'].strip();
-            self.copyright.holder = tmp_dict['holder'].strip();
-            del(tmp_dict);
+##            print(regexinfo.search(filecontent).groupdict())
+            tmp_dict = regexinfo.search(filecontent).groupdict()
+            self.copyright.year = tmp_dict['date'].strip()
+            self.copyright.holder = tmp_dict['holder'].strip()
+            del(tmp_dict)
 
     def get_legalnotice_content(self, filecontent):
         ''' Extracts the legal notice block from the content of the text
@@ -322,26 +341,28 @@ class docinfo:
         Returns: Nothing
         '''
         # This is how to find the beginning of the block
-        strpattern_start_tag = '.*^:legalnotice:\s*\n*';
+        strpattern_start_tag = r'.*^:legalnotice:\s*\n*'
         # This is how to find the data as one piece
-        str_pattern_block_content = '(?P<simparas>^\..*?)' ;
-        # This is the end of the block (means a line begining by /// or :something: or one blank line)
-        str_pattern_end_of_block = '\n(?:\:\w+\:|/{3,}|\s*\n)';
+        str_pattern_block_content = r'(?P<simparas>^\..*?)' 
+        # This is the end of the block (means a line begining by /// 
+	# or :something: or one blank line)
+        str_pattern_end_of_block = r'\n(?:\:\w+\:|/{3,}|\s*\n)'
         # These 3 blocks form a global pattern
-        str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
-        regexinfo = re.compile(str_pattern_global, flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL);
+        str_pattern_global = strpattern_start_tag + str_pattern_block_content
+        str_pattern_global += str_pattern_end_of_block
+        regexinfo = re.compile(str_pattern_global, 
+		flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL)
         if regexinfo.match(filecontent, re.MULTILINE) is None:
-            print("No legal notice tag found");
+            print("No legal notice tag found")
         else:
             # If pattern matches, process data
-            ## print(regexinfo.search(filecontent).groupdict());
-            tmp_dict = regexinfo.search(filecontent).groupdict();
-            ## print(tmp_dict['simparas'].strip().split("\n."));
+            ## print(regexinfo.search(filecontent).groupdict())
+            tmp_dict = regexinfo.search(filecontent).groupdict()
+            ## print(tmp_dict['simparas'].strip().split("\n."))
             for tmp_item in tmp_dict['simparas'].strip().split("\n."):
-                ## print(tmp_item.lstrip('.').strip());
-                self.legalnotice.simpara.append(tmp_item.lstrip('.').strip());
-            del(tmp_dict);
-            del(tmp_item);
+                ## print(tmp_item.lstrip('.').strip())
+                self.legalnotice.simpara.append(tmp_item.lstrip('.').strip())
+            del(tmp_dict)
 
     def gen_xml_from_self(self, line_indent = ''):
         ''' Generates the xml structure from the current object
@@ -351,110 +372,120 @@ class docinfo:
             An xml-formatted string
         '''
         
-        if not re.match('^\s*$', line_indent):
-            line_indent = "";
-        _result = "";
+        if not re.match(r'^\s*$', line_indent):
+            line_indent = ""
+        _result = ""
 
         if self.copyright.holder:
             # Generating copyright tag
-            _result += "\n"+ self.copyright.gen_xml_from_self(line_indent, ['year','holder']);
+            _result += "\n"+ self.copyright.gen_xml_from_self(line_indent, 
+		['year','holder'])
         
         if self.legalnotice.simpara:
             # generating legalnotice tag
-            _result += "\n"+ self.legalnotice.gen_xml_from_self(line_indent);
+            _result += "\n"+ self.legalnotice.gen_xml_from_self(line_indent)
 
  
         if self.revhistory:
             # Generating revision history tags
-            _result += "\n"+ line_indent +"<revhistory>";
-            revision_items_list=['revnumber','date','authorinitials','revremark'];
+            _result += "\n"+ line_indent +"<revhistory>"
+            revision_items_list = ['revnumber', 'date', 'authorinitials',
+		'revremark']
             for revitem in self.revhistory:
-                _result += "\n"+ revitem.gen_xml_from_self(line_indent + '\t', revision_items_list);
-            _result += "\n"+ line_indent +"</revhistory>";
-            _result += "\n";
+                _result += "\n"+ revitem.gen_xml_from_self(line_indent + '\t', 
+			revision_items_list)
+            _result += "\n"+ line_indent +"</revhistory>"
+            _result += "\n"
 
-        return _result;
+        return _result
     
     def parse_document(self, doc_content):
-        self.get_revinfo_block(doc_content);
-        self.get_copyright_content(doc_content);
-        self.get_legalnotice_content(doc_content);
+	''' Call the several methods used for parsing file
+	Input parameter:
+	    doc_content is the content of the document to be parsed
+	'''
+        self.get_revinfo_block(doc_content)
+        self.get_copyright_content(doc_content)
+        self.get_legalnotice_content(doc_content)
 
 
 def usage():
-    print(" ***************** How to use this tool ****************** ");
-    print(__doc__);
-    print(" ********************************************************* ");
+    ''' Prints docinfo documentation '''
+    print(" ***************** How to use this tool ****************** ")
+    print(__doc__)
+    print(" ********************************************************* ")
 
 
 
 def main():
+    ''' Main function '''
     # Initializing the file name container.
-    input_filename = '';
+    input_filename = ''
     
     # Checking command line arguments
-    parser = argparse.ArgumentParser();
-    parser.add_argument('asciidoc_input_file_name', help='Asciidoc input file name.');
-    args = parser.parse_args();
-    input_filename = args.asciidoc_input_file_name;
-    del(args);
+    parser = argparse.ArgumentParser()
+    parser.add_argument('asciidoc_input_file_name', 
+	help='Asciidoc input file name.')
+    args = parser.parse_args()
+    input_filename = args.asciidoc_input_file_name
+    del(args)
     
     # Proceed if file exists
     if(len(input_filename) > 0 and path.isfile(input_filename)):
         # Retrieving the data from the asciidoc text file
-        ## input_filename = 'samples/test_asciidoc.txt';
-        f = open(input_filename, 'r');
-        str_in = f.read();
-        f.close();
-        del(f);
+        ## input_filename = 'samples/test_asciidoc.txt'
+        file1 = open(input_filename, 'r')
+        str_in = file1.read()
+        file1.close()
+        del(file1)
         
         # This does it globally and print the table of hashtables to the screen.
-        doc_item = docinfo();
-        doc_item.parse_document(str_in);
+        doc_item = docinfo()
+        doc_item.parse_document(str_in)
         
         # writing output to the target file name
-        out_f = open(doc_item.gen_docinfo_filename(input_filename), 'w');
-        out_f.write(doc_item.gen_xml_from_self(''));
-        out_f.close();
-        ##    print("XML file generation ended.");
+        out_f = open(doc_item.gen_docinfo_filename(input_filename), 'w')
+        out_f.write(doc_item.gen_xml_from_self(''))
+        out_f.close()
+        ##    print("XML file generation ended.")
     else:
-        print("[ERROR] No correct file name provided.");
-        usage();
-        print("[ERROR] No correct file name provided.");
-        sys.exit(2);
+        print("[ERROR] No correct file name provided.")
+        usage()
+        print("[ERROR] No correct file name provided.")
+        sys.exit(2)
 
 
 if __name__ == '__main__':
-    main();
+    main()
     #run tests if called from command-line
-##    print("# Usage explanations");
-##    usage();
+##    print("# Usage explanations")
+##    usage()
     
-##    print("# ************** Unit tests... To be done. **************");
-##    print("# Testing the 'revision' class:");
-##    rev_item = revision();
-##    print("# A non customized revhistory class item");
-##    print rev_item.gen_xml_from_self('\t');
+##    print("# ************** Unit tests... To be done. **************")
+##    print("# Testing the 'revision' class:")
+##    rev_item = revision()
+##    print("# A non customized revhistory class item")
+##    print rev_item.gen_xml_from_self('\t')
 
 
 
     # This is to check whether the generated xml conforms to the docbook's DTD
     #===========================================================================
-    # import libxml2;
+    # import libxml2
     # dtd="""<!ELEMENT foo EMPTY>"""
-    # # instance=doc_item.gen_xml_from_self('');
-    # dtd = libxml2.parseDTD("-//OASIS//DTD DocBook XML V4//EN",None);
-    # ctxt = libxml2.newValidCtxt();
-    # doc = libxml2.parseDoc(instance);
-    # ret = doc.validateDtd(ctxt, dtd);
+    # # instance=doc_item.gen_xml_from_self('')
+    # dtd = libxml2.parseDTD("-//OASIS//DTD DocBook XML V4//EN",None)
+    # ctxt = libxml2.newValidCtxt()
+    # doc = libxml2.parseDoc(instance)
+    # ret = doc.validateDtd(ctxt, dtd)
     # if ret != 1:
-    #     print("error doing DTD validation");
+    #     print("error doing DTD validation")
     # else:
-    #     print("Generated XML has a valid DTD!");
+    #     print("Generated XML has a valid DTD!")
 
-    # doc.freeDoc();
-    # dtd.freeDtd();
-    # del dtd;
-    # del ctxt;
+    # doc.freeDoc()
+    # dtd.freeDtd()
+    # del dtd
+    # del ctxt
     #===========================================================================
-    pass;
+    # pass
