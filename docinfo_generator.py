@@ -246,7 +246,7 @@ class docinfo:
         str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
         revinfo = re.compile(str_pattern_global, flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL);
         if revinfo.match(filecontent, re.MULTILINE) is None:
-            print("No revInfo tag found");
+            if VERBOSE > 0: print("No revInfo tag found");
         else:
             # If pattern matches, process data
             revinfo_data = revinfo.search(filecontent).groups(0)[0];
@@ -307,7 +307,7 @@ class docinfo:
         str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
         regexinfo = re.compile(str_pattern_global, flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL);
         if regexinfo.match(filecontent, re.MULTILINE) is None:
-            print("No copyright tag found");
+            if VERBOSE > 0: print("No copyright tag found");
         else:
             # If pattern matches, process data
 ##            print(regexinfo.search(filecontent).groupdict());
@@ -332,7 +332,7 @@ class docinfo:
         str_pattern_global = strpattern_start_tag + str_pattern_block_content + str_pattern_end_of_block;
         regexinfo = re.compile(str_pattern_global, flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL);
         if regexinfo.match(filecontent, re.MULTILINE) is None:
-            print("No legal notice tag found");
+            if VERBOSE > 0: print("No legal notice tag found");
         else:
             # If pattern matches, process data
             ## print(regexinfo.search(filecontent).groupdict());
