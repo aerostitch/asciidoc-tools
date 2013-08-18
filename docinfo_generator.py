@@ -115,9 +115,9 @@ from os import path
 
 __author__     = "Joseph HERLANT"
 __copyright__  = "Copyright 2013, Joseph HERLANT"
-__credits__    = ["Joseph HERLANT"]
+__credits__    = ["Joseph HERLANT", "Laurent LICOUR"]
 __license__    = "GNU GPL"
-__version__    = "1.0.2"
+__version__    = "1.0.3"
 __maintainer__ = "Joseph HERLANT"
 __email__      = "herlantj@gmail.com"
 __status__     = "Production"
@@ -249,7 +249,7 @@ class docinfo:
         '''
 
         # This is how to find the beginning of the block
-        strpattern_start_tag = r'.*^:revinfo:\s*\n'
+        strpattern_start_tag = r'.*?^:revinfo:\s*\n'
         # This is how to find the revinfo items as one piece
         str_pattern_block = r'(^[v][0-9\.]+[,][^:]+:[^\n]*(?:\n[^:][^\n]+)*?)+' 
         # This is the end of the block (means a line begining by ///
@@ -260,7 +260,7 @@ class docinfo:
         str_pattern_global += str_pattern_end_of_block
         revinfo = re.compile(str_pattern_global, 
 		flags=re.MULTILINE|re.UNICODE|re.IGNORECASE|re.DOTALL)
-        if revinfo.match(filecontent, re.MULTILINE) is None:
+        if revinfo.match(filecontent) is None:
             if VERBOSE > 0: print("No revInfo tag found")
         else:
             # If pattern matches, process data
@@ -283,8 +283,9 @@ class docinfo:
         global_rem = []
         current_rem = {}
         for item in revinfo_block.split('\n'):
+            # For debugging
+            if (VERBOSE > 2): print("[REVISION ITEM] "+ item)
             if rev.match(item) is None:
-##                print("This is a remark line...")
                 current_rem['remarks'] += item + "\n"
             else:
                 if 'revision' in current_rem.keys():
@@ -314,7 +315,7 @@ class docinfo:
         Returns: Nothing
         '''
         # This is how to find the beginning of the block
-        strpattern_start_tag = r'.*^:copyright:\s*\n*'
+        strpattern_start_tag = r'.*?^:copyright:\s*\n*'
         # This is how to find the data as one piece
         str_pattern_block_content = '(?P<date>[^,]*)[,](?P<holder>.*?)' 
         # This is the end of the block (means a line begining by /// 
@@ -342,7 +343,7 @@ class docinfo:
         Returns: Nothing
         '''
         # This is how to find the beginning of the block
-        strpattern_start_tag = r'.*^:legalnotice:\s*\n*'
+        strpattern_start_tag = r'.*?^:legalnotice:\s*\n*'
         # This is how to find the data as one piece
         str_pattern_block_content = r'(?P<simparas>^\..*?)' 
         # This is the end of the block (means a line begining by /// 

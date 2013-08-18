@@ -10,6 +10,9 @@ These are the tools I develop to enhance my asciidoc experience
 --------------------------
 
 ~~~~~
+v1.0.3, Joseph HERLANT, 2013-08-18:
+  It matched only the last group. Correcting this to get only the first of each groups
+  to avoid getting data in the content of the document if defined in the header
 v1.0.2, Joseph HERLANT, 2013-07-05: Adding a verbose flag to show more informations while processing data.
 v1.0.1, Laurent LICOUR, 2013-06-05:
   Correcting documentation.

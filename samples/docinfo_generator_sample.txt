@@ -14,6 +14,8 @@ Joseph HERLANT <herlantj@gmail.com>
 //////
 :copyright: 2013, Joseph HERLANT
 :revinfo:
+v1.3, Joseph HERLANT, 2013-08-18:
+ These are my notes for 1.3 revision, just one line
 v1.2, Joseph HERLANT, 2013-02-22:
  These are my notes for 1.2 revision
  And a bunch of other infos
