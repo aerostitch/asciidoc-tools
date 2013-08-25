@@ -1,6 +1,6 @@
 Customizing front page and footer pages in asciidoc
 ===================================================
-Joseph HERLANT <herlantj@gmail.com>
+Joseph HERLANT
 
 :Author Initials: Joseph HERLANT
 :toc:

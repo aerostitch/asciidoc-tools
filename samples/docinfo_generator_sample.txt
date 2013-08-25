@@ -1,6 +1,6 @@
 asciidoc-tools
 ==============
-Joseph HERLANT <herlantj@gmail.com>
+Joseph HERLANT
 
 :Author Initials: Joseph HERLANT
 :toc:
