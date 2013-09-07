@@ -218,7 +218,7 @@ class revision(Docinfoitem):
 
 
     
-class docinfo:
+class docinfo(object):
     ''' A class that will handle docinfo data '''
     def __init__(self):
         ''' Class constructor... Initializing inner variables
